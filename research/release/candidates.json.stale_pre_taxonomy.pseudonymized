@@ -1,0 +1,102 @@
+{
+  "dev-734a990cde": {
+    "name": "name-3b1931947a",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-1284853f78": {
+    "name": "name-34f5d303ce",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-e355b1e895": {
+    "name": "name-7ef5554e2f",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-0514484612": {
+    "name": "name-a7e34ee861",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-ac62d3a516": {
+    "name": "name-1ad575f04a",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-c3cc7b878f": {
+    "name": "name-6b64d46c25",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-96506b82a5": {
+    "name": "name-6bb79d04c6",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-a9e129e88a": {
+    "name": "name-1b5f269eaa",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-ce0c347e87": {
+    "name": "name-5c63692ce9",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-1e3c797d97": {
+    "name": "name-4e77134280",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-8452922c06": {
+    "name": "name-1ce314b4c5",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "dev-fc05f0b34c": {
+    "name": "dev-fc05f0b34c",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-b708e26c2d": {
+    "name": "dev-b708e26c2d",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-31257ba433": {
+    "name": "dev-31257ba433",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-b20b293141": {
+    "name": "dev-b20b293141",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-dad0d1417d": {
+    "name": "dev-dad0d1417d",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-4851bd5054": {
+    "name": "dev-4851bd5054",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-763cdfc1a9": {
+    "name": "dev-763cdfc1a9",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "dev-c0f69da3cc": {
+    "name": "dev-c0f69da3cc",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T11:23:39"
+  },
+  "dev-1220c9ad9a": {
+    "name": "dev-1220c9ad9a",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T11:23:39"
+  }
+}

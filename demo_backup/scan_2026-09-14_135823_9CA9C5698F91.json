@@ -1,0 +1,235 @@
+{
+  "timestamp": "2026-09-14 13:58:23",
+  "features": {
+    "mac": "9C:A9:C5:69:8F:91",
+    "name": "İrem (AirPods)",
+    "vendor": "Apple, Inc.",
+    "rtt_ms": "Min: 3.2ms | Avg: 4.44ms | Max: 5.15ms",
+    "distance_est": "Approx. 1 - 3 meters",
+    "uptime": "2.48 Hours",
+    "security_posture": "Legacy / Just-Works (Unsecured)",
+    "hardware_info": {
+      "lmp_version": "Extracted via Socket (LMP 14)",
+      "lmp_integer": 14,
+      "lmp_subversion": "Hidden by Baseband (Modalias: bluetooth:v004Cp201Bd0427)",
+      "manufacturer": "Apple, Inc. (76)",
+      "supported_features": "Unknown",
+      "failed": false,
+      "baseband_features": "0xbf 0xfe 0x2d 0xfe 0xdb 0xff 0x7b 0x87 | 3-Slot Packets, 5-Slot Packets, Encryption, Slot Offset, Timing Accuracy, Role Switch, Sniff Mode, RSSI, CQDDR, SCO Link, HV2 Packets, HV3 Packets, u-law Voice, A-law Voice"
+    },
+    "protocols": [
+      "L2CAP\" (0x0100)",
+      "AVCTP\" (0x0017)",
+      "RFCOMM\" (0x0003)"
+    ],
+    "services": [
+      "GATT",
+      "UARPS",
+      "AAP Server",
+      "Handsfree",
+      "AVRCP Target",
+      "AVRCP Controller",
+      "Audio Sink"
+    ],
+    "permissions": [
+      "Audio & Microphone Access: GRANTED",
+      "Contacts & Call History Access: DENIED",
+      "SMS/Text Messages Access: DENIED",
+      "File Transfer & Media Access: DENIED",
+      "Keyboard/Mouse Input Control: DENIED",
+      "Internet Tethering/Network Access: DENIED"
+    ],
+    "lmp_features": {
+      "lmp_features_raw": "bf:fe:2d:fe:db:ff:7b:87",
+      "lmp_features": {
+        "three_slot_packets": true,
+        "five_slot_packets": true,
+        "encryption": true,
+        "slot_offset": true,
+        "timing_accuracy": true,
+        "role_switch": true,
+        "hold_mode": false,
+        "sniff_mode": true,
+        "power_control_requests": true,
+        "channel_quality_driven_data_rate": true,
+        "sco_link": true,
+        "hv2_packets": true,
+        "hv3_packets": true,
+        "ulaw_log_synchronous_data": true,
+        "alaw_log_synchronous_data": true,
+        "cvsd_synchronous_data": true,
+        "paging_parameter_negotiation": false,
+        "power_control": true,
+        "transparent_synchronous_data": true,
+        "broadcast_encryption": false,
+        "enhanced_data_rate_acl_2mbps": true,
+        "enhanced_data_rate_acl_3mbps": true,
+        "enhanced_inquiry_scan": true,
+        "interlaced_inquiry_scan": true,
+        "interlaced_page_scan": true,
+        "rssi_with_inquiry_results": true,
+        "extended_sco_link_ev3": true,
+        "ev4_packets": true,
+        "ev5_packets": true,
+        "afh_capable_slave": true,
+        "afh_classification_slave": true,
+        "bredr_not_supported": false,
+        "le_supported_controller": true,
+        "three_slot_enhanced_data_rate_acl": true,
+        "five_slot_enhanced_data_rate_acl": true,
+        "sniff_subrating": true,
+        "pause_encryption": true,
+        "afh_capable_master": true,
+        "afh_classification_master": true,
+        "enhanced_data_rate_esco_2mbps": true,
+        "enhanced_data_rate_esco_3mbps": true,
+        "three_slot_enhanced_data_rate_esco": true,
+        "extended_inquiry_response": true,
+        "simultaneous_le_bredr": true,
+        "secure_simple_pairing": true,
+        "encapsulated_pdu": true,
+        "erroneous_data_reporting": true,
+        "non_flushable_packet_boundary_flag": true,
+        "link_supervision_timeout_changed_event": true,
+        "inquiry_response_tx_power_level": true,
+        "enhanced_power_control": true,
+        "extended_features": false
+      }
+    },
+    "gatt_appearance": null,
+    "gatt_preferred_conn_params": null,
+    "sdp_full_service_records": [
+      {
+        "service_name_raw": null,
+        "service_description_raw": "PnP Information",
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "GATT",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "UARPS",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "AAP Server",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "Handsfree",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "AVRCP Target",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "AVRCP Controller",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      },
+      {
+        "service_name_raw": "Audio Sink",
+        "service_description_raw": null,
+        "language_base_offset": "0x100",
+        "sdp_extracted_hints": []
+      }
+    ],
+    "packet_metrics": {
+      "absolute_rssi_dbm": -60,
+      "link_quality_0_255": 255,
+      "tx_power_level_dbm": 12,
+      "sdp_record_handles": [
+        "0x4f491200",
+        "0x4f491801",
+        "0x4f49f160",
+        "0x4f492190",
+        "0x4f49111e",
+        "0x4f49110c",
+        "0x4f49110e",
+        "0x4f49110b"
+      ],
+      "gatt_uuids": []
+    },
+    "dbus_cache": {
+      "battery": "N/A",
+      "class_of_device": "0x240418",
+      "modalias": "bluetooth:v004Cp201Bd0427",
+      "manufacturer_data": "N/A",
+      "device_id_profile": {
+        "source": "bluetooth",
+        "vendor_id": "004C",
+        "product_id": "201B",
+        "version": "0427",
+        "vendor_name": "Apple, Inc.",
+        "chipset_vendor": "Apple, Inc.",
+        "chipset_product_id": "201B",
+        "chipset_model": "Apple AirPods (family, exact SoC unconfirmed - empirical observation only)",
+        "estimated_chipset_release_year": null,
+        "estimated_min_os_hint": null
+      }
+    }
+  },
+  "aggressive_interrogation": {
+    "deep_gatt_characteristics": {},
+    "afh_channel_map": {
+      "map": "0xfeff3ffc83aaffffff3f",
+      "mode": "Unknown"
+    },
+    "mtu_fragmentation_test": "Unknown",
+    "baseband_features_hex": "0xbf 0xfe 0x2d 0xfe 0xdb 0xff 0x7b 0x87 | 3-Slot Packets, 5-Slot Packets, Encryption, Slot Offset, Timing Accuracy, Role Switch, Sniff Mode, RSSI, CQDDR, SCO Link, HV2 Packets, HV3 Packets, u-law Voice, A-law Voice",
+    "link_policy": "Unknown",
+    "supervision_timeout": "32000 slots (20000.00 msec)",
+    "clock_offset": "0x0dd7"
+  },
+  "inferences": {
+    "device_type": "Audio Peripheral (Apple)",
+    "os": "Embedded Firmware (RTOS)",
+    "major_minor_version": "Audio Sink Device (LMP 14)",
+    "confidence": "High (Name/CoD Heuristic)",
+    "inconsistency_flags": [],
+    "evidence_chain": [
+      {
+        "signal_name": "modalias_chipset",
+        "observed_value": "Apple AirPods (family, exact SoC unconfirmed - empirical observation only)",
+        "inference": "Chipset release year unknown",
+        "contribution": "Chipset model resolved but has no release year in our table, so the chronology check could not run - this entry is not evidence for or against the prediction",
+        "weight": 0.0,
+        "direction": "unused"
+      },
+      {
+        "signal_name": "cod_vs_device_name",
+        "observed_value": "CoD major=0x04, name='İrem (AirPods)'",
+        "inference": "Name keyword maps to major-class 0x04",
+        "contribution": "Class-of-Device and advertised name agree on device category",
+        "weight": 0.15,
+        "direction": "supports"
+      }
+    ],
+    "has_conflicting_signals": false,
+    "confidence_score": 0.9
+  },
+  "deep_metadata": {
+    "power_state": "Active Polling Mode (High Performance) - Latency: 4.44ms",
+    "hardware_age": "Legacy / Unknown (LMP 14)",
+    "market": "Premium Consumer Tech (Apple Ecosystem)",
+    "protocol_insights": [
+      "No GATT UUIDs enumerated (enumeration failed, timed out, or device exposes none - not evidence the device itself blocks BLE)",
+      "Randomized/Generic SDP Sequencing",
+      "Standard Media & Serial Transport Profile"
+    ]
+  }
+}

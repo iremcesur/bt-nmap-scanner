@@ -1,0 +1,262 @@
+{
+  "E9:BF:3C:1B:96:4F": {
+    "name": "E9-BF-3C-1B-96-4F",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "7C:8B:98:17:CC:36": {
+    "name": "7C-8B-98-17-CC-36",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "7B:18:FA:ED:FF:B6": {
+    "name": "7B-18-FA-ED-FF-B6",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "46:9E:39:F7:7B:99": {
+    "name": "46-9E-39-F7-7B-99",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "7E:9C:30:10:AC:A2": {
+    "name": "7E-9C-30-10-AC-A2",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "40:ED:75:8E:FC:D4": {
+    "name": "40-ED-75-8E-FC-D4",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "7C:9A:98:5B:28:DA": {
+    "name": "7C-9A-98-5B-28-DA",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "72:BE:5D:F2:D3:FC": {
+    "name": "72-BE-5D-F2-D3-FC",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "61:85:12:98:6F:B4": {
+    "name": "61-85-12-98-6F-B4",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "5B:DD:BD:FA:9A:91": {
+    "name": "5B-DD-BD-FA-9A-91",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "6E:F5:F9:C8:F4:BD": {
+    "name": "6E-F5-F9-C8-F4-BD",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "74:84:29:3B:78:B3": {
+    "name": "74-84-29-3B-78-B3",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "5F:8F:3D:FE:AF:06": {
+    "name": "5F-8F-3D-FE-AF-06",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "63:34:9C:3B:74:F5": {
+    "name": "63-34-9C-3B-74-F5",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "75:0F:32:EA:5F:C2": {
+    "name": "75-0F-32-EA-5F-C2",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "33:87:F1:04:0E:B5": {
+    "name": "33-87-F1-04-0E-B5",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "58:93:D8:AE:AE:76": {
+    "name": "QL-1110NWB3861",
+    "device_type": "classic",
+    "first_seen": "2026-08-31T18:58:38"
+  },
+  "79:FB:FA:B4:04:AC": {
+    "name": "79-FB-FA-B4-04-AC",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:03"
+  },
+  "63:4D:A5:6F:15:56": {
+    "name": "63-4D-A5-6F-15-56",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:03"
+  },
+  "60:56:30:DE:5A:51": {
+    "name": "60-56-30-DE-5A-51",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:03"
+  },
+  "51:F2:C9:67:8F:10": {
+    "name": "51-F2-C9-67-8F-10",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:23"
+  },
+  "68:88:A1:46:1A:D5": {
+    "name": "Daikin",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:23"
+  },
+  "6E:8C:42:5A:D6:EA": {
+    "name": "6E-8C-42-5A-D6-EA",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:23"
+  },
+  "43:7E:4F:77:78:FF": {
+    "name": "43-7E-4F-77-78-FF",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:23"
+  },
+  "11:4B:D4:B7:FB:56": {
+    "name": "11-4B-D4-B7-FB-56",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:46"
+  },
+  "68:4E:EF:51:50:DB": {
+    "name": "68-4E-EF-51-50-DB",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T18:59:46"
+  },
+  "57:36:F1:78:20:BC": {
+    "name": "57-36-F1-78-20-BC",
+    "device_type": "ble",
+    "first_seen": "2026-08-31T19:00:06"
+  },
+  "74:42:FD:32:91:17": {
+    "name": "74-42-FD-32-91-17",
+    "device_type": "ble",
+    "first_seen": "2026-09-01T14:38:54"
+  },
+  "4B:39:6C:F9:65:A0": {
+    "name": "4B-39-6C-F9-65-A0",
+    "device_type": "ble",
+    "first_seen": "2026-09-01T14:38:54"
+  },
+  "5C:80:0E:7F:F6:88": {
+    "name": "5C-80-0E-7F-F6-88",
+    "device_type": "ble",
+    "first_seen": "2026-09-01T14:38:54"
+  },
+  "7E:91:55:9D:C5:08": {
+    "name": "7E-91-55-9D-C5-08",
+    "device_type": "ble",
+    "first_seen": "2026-09-01T14:39:06"
+  },
+  "79:89:F7:FC:BD:A5": {
+    "name": "79-89-F7-FC-BD-A5",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "4B:D0:71:F6:9B:BB": {
+    "name": "4B-D0-71-F6-9B-BB",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "5A:61:F1:83:E5:F0": {
+    "name": "5A-61-F1-83-E5-F0",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "9C:58:84:1A:0E:5C": {
+    "name": "Mehmet MacBook Air",
+    "device_type": "classic",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "6A:10:8C:45:BC:72": {
+    "name": "6A-10-8C-45-BC-72",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "36:43:D0:1F:D2:1A": {
+    "name": "36-43-D0-1F-D2-1A",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "6C:3E:85:29:D8:42": {
+    "name": "6C-3E-85-29-D8-42",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "48:3E:23:43:D5:81": {
+    "name": "48-3E-23-43-D5-81",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "67:42:94:8D:5E:C8": {
+    "name": "67-42-94-8D-5E-C8",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "0D:9B:FE:1D:95:27": {
+    "name": "0D-9B-FE-1D-95-27",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "4C:3D:F0:9E:4C:D6": {
+    "name": "4C-3D-F0-9E-4C-D6",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "6E:0B:5E:E5:F0:D7": {
+    "name": "6E-0B-5E-E5-F0-D7",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "79:09:73:20:53:BD": {
+    "name": "79-09-73-20-53-BD",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "18:9C:2C:01:07:6F": {
+    "name": "18-9C-2C-01-07-6F",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "7D:51:14:83:5B:E8": {
+    "name": "7D-51-14-83-5B-E8",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "43:29:70:9C:C7:DD": {
+    "name": "43-29-70-9C-C7-DD",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "4F:28:08:0C:48:85": {
+    "name": "4F-28-08-0C-48-85",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "6A:69:40:C3:B2:A4": {
+    "name": "6A-69-40-C3-B2-A4",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "4A:5D:B8:4A:6D:41": {
+    "name": "4A-5D-B8-4A-6D-41",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "4B:5B:36:0D:61:20": {
+    "name": "4B-5B-36-0D-61-20",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "42:52:24:EB:D9:53": {
+    "name": "42-52-24-EB-D9-53",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-09-14 13:55:42",
+  "features": {
+    "mac": "9C:A9:C5:69:8F:91",
+    "name": "Unknown",
+    "vendor": "Apple, Inc.",
+    "rtt_ms": "Min: 1.92ms | Avg: 3.03ms | Max: 3.71ms",
+    "distance_est": "N/A",
+    "uptime": "Unknown",
+    "security_posture": "Legacy / Just-Works (Unsecured)",
+    "hardware_info": {
+      "lmp_version": "Unknown",
+      "lmp_integer": 0,
+      "lmp_subversion": "Hidden by Baseband (Modalias: bluetooth:v004Cp201Bd0427)",
+      "manufacturer": "Unknown",
+      "supported_features": "Unknown",
+      "failed": false
+    },
+    "protocols": [],
+    "services": [],
+    "permissions": [
+      "Audio & Microphone Access: DENIED",
+      "Contacts & Call History Access: DENIED",
+      "SMS/Text Messages Access: DENIED",
+      "File Transfer & Media Access: DENIED",
+      "Keyboard/Mouse Input Control: DENIED",
+      "Internet Tethering/Network Access: DENIED",
+      "WARNING: SDP Connection Blocked - Permissions Inferred"
+    ],
+    "lmp_features": null,
+    "gatt_appearance": null,
+    "gatt_preferred_conn_params": null,
+    "sdp_full_service_records": [],
+    "packet_metrics": {
+      "absolute_rssi_dbm": "N/A",
+      "link_quality_0_255": "N/A",
+      "tx_power_level_dbm": "N/A",
+      "sdp_record_handles": [],
+      "gatt_uuids": []
+    },
+    "dbus_cache": {
+      "battery": "N/A",
+      "class_of_device": "0x240418",
+      "modalias": "bluetooth:v004Cp201Bd0427",
+      "manufacturer_data": "N/A",
+      "device_id_profile": {
+        "source": "bluetooth",
+        "vendor_id": "004C",
+        "product_id": "201B",
+        "version": "0427",
+        "vendor_name": "Apple, Inc.",
+        "chipset_vendor": "Apple, Inc.",
+        "chipset_product_id": "201B",
+        "chipset_model": "Apple AirPods (family, exact SoC unconfirmed - empirical observation only)",
+        "estimated_chipset_release_year": null,
+        "estimated_min_os_hint": null
+      }
+    }
+  },
+  "aggressive_interrogation": {
+    "deep_gatt_characteristics": {},
+    "afh_channel_map": {
+      "map": "Unknown (Blocked)",
+      "mode": "Unknown"
+    },
+    "mtu_fragmentation_test": "Unknown",
+    "baseband_features_hex": "Unknown",
+    "link_policy": "Unknown",
+    "supervision_timeout": "Unknown",
+    "clock_offset": "Unknown"
+  },
+  "inferences": {
+    "device_type": "Audio Peripheral (Apple)",
+    "os": "Embedded Firmware (RTOS)",
+    "major_minor_version": "Audio Sink Device (LMP 0)",
+    "confidence": "High (Name/CoD Heuristic)",
+    "inconsistency_flags": [],
+    "evidence_chain": [
+      {
+        "signal_name": "modalias_chipset",
+        "observed_value": "Apple AirPods (family, exact SoC unconfirmed - empirical observation only)",
+        "inference": "Chipset release year unknown",
+        "contribution": "Chipset model resolved but has no release year in our table, so the chronology check could not run - this entry is not evidence for or against the prediction",
+        "weight": 0.0,
+        "direction": "unused"
+      }
+    ],
+    "has_conflicting_signals": false,
+    "confidence_score": 0.9
+  },
+  "deep_metadata": {
+    "power_state": "Active Polling Mode (High Performance) - Latency: 3.03ms",
+    "hardware_age": "Unknown",
+    "market": "Premium Consumer Tech (Apple Ecosystem)",
+    "protocol_insights": [
+      "No GATT UUIDs enumerated (enumeration failed, timed out, or device exposes none - not evidence the device itself blocks BLE)"
+    ]
+  }
+}

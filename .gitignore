@@ -1,0 +1,72 @@
+# dependencies
+node_modules/
+/frontend/.pnp
+/frontend/.pnp.js
+
+# build output
+/frontend/build
+
+# python
+__pycache__/
+*.pyc
+
+# testing
+/frontend/coverage
+
+# scanner runtime artifacts (contain real device MACs/identifiers)
+# NOTE: these paths were previously written as backend/... but the scanner
+# writes them to the repository ROOT, so the rules never matched and both
+# archives were committed with third-party MACs and advertised device names in
+# them. Anchored at the root now. Files already in history are NOT removed by
+# this - see research/DATA_RETENTION.md.
+csv_error.log
+# Matched at ANY depth, not by a fixed path: the scanner opens these by
+# relative name, so an archive appears wherever it was last run from. Three
+# copies existed in three directories before this was noticed.
+historical_scans.jsonl
+research_evaluation.csv
+
+# raw availability-sweep archives: third-party MACs in the clear. Only the
+# pseudonymized copies under research/release/ may be published.
+/research/candidates.json
+/research/candidates_own_devices.json
+/research/availability_raw.jsonl
+/research/availability_raw_pilot_cleaned.jsonl
+/research/availability_raw_pilot_own_devices.jsonl
+/research/*.stale_*
+
+# pseudonymization salt: with it the release is reversible. Never commit.
+/research/pseudonymize_salt.DO_NOT_RELEASE.bin
+*.DO_NOT_RELEASE.bin
+
+# logs / os cruft
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# LaTeX build artifacts (draft*.tex are the source of truth; PDFs are rebuilt locally)
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.out
+draft1_0.pdf
+draft1_0_planning.pdf
+
+# Cross-encounter observation store (backend/routes/pythonfiles/observation_store.py).
+# Holds no MACs and no advertised names - records are keyed by a salted HMAC
+# pseudonym - but it is still a per-device archive built from third-party scans,
+# so it stays local and out of the release until the DPO review settles
+# (research/DATA_RETENTION.md). The salt must never be published: with it the
+# pseudonyms are reversible by brute force over the address space.
+observation_store.jsonl
+observation_store_salt.DO_NOT_RELEASE.bin

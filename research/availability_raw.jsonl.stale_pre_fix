@@ -1,0 +1,8 @@
+{"mac": "9C:A9:C5:69:8F:91", "timestamp": "2026-08-17T15:08:12", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "9C:5F:5A:C9:6F:A8", "timestamp": "2026-08-17T15:08:25", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "2C:A7:9E:4E:6F:E9", "timestamp": "2026-08-17T15:08:38", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "E4:8C:73:90:E4:FC", "timestamp": "2026-08-17T15:08:55", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "AC:80:FB:84:C7:D2", "timestamp": "2026-08-17T15:09:12", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "A8:81:7E:9C:17:4C", "timestamp": "2026-08-17T15:09:29", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "D0:C1:BF:2D:1A:97", "timestamp": "2026-08-17T15:09:47", "connectable": true, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}
+{"mac": "80:CC:12:23:88:CF", "timestamp": "2026-08-17T15:10:01", "connectable": false, "gatt_appearance": null, "gatt_conn_params": null, "chipset_resolved": null, "sdp_service_name": null, "errors": []}

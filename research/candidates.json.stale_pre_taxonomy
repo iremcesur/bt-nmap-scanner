@@ -1,0 +1,102 @@
+{
+  "9C:A9:C5:69:8F:91": {
+    "name": "\u0130rem (AirPods)",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "9C:5F:5A:C9:6F:A8": {
+    "name": "OPPO A5 2020",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "2C:A7:9E:4E:6F:E9": {
+    "name": "SCharger-22KT-S0-NS2591183223",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "E4:8C:73:90:E4:FC": {
+    "name": "realme 11 Pro+ 5G",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "AC:80:FB:84:C7:D2": {
+    "name": "Galaxy Buds2 (C7D2)",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "A8:81:7E:9C:17:4C": {
+    "name": " E.iPhone",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "D0:C1:BF:2D:1A:97": {
+    "name": "Redmi A5",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "80:CC:12:23:88:CF": {
+    "name": "HUAWEI WATCH FIT 3-8CF",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "84:88:E1:E0:B0:31": {
+    "name": "\u0130rem iPhone",
+    "device_type": "classic",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "DE:85:2F:CF:4A:01": {
+    "name": "LOGI M240",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "D9:F1:DA:3A:A7:1A": {
+    "name": "Pebble M350s",
+    "device_type": "ble",
+    "first_seen": "2026-08-17T15:08:12"
+  },
+  "78:18:93:BC:CC:A3": {
+    "name": "78-18-93-BC-CC-A3",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "52:F8:9C:62:EC:A2": {
+    "name": "52-F8-9C-62-EC-A2",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "52:55:61:06:6F:CA": {
+    "name": "52-55-61-06-6F-CA",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "79:FF:E8:61:3C:86": {
+    "name": "79-FF-E8-61-3C-86",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "74:2E:62:A2:ED:9F": {
+    "name": "74-2E-62-A2-ED-9F",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "73:D1:21:1C:9E:B6": {
+    "name": "73-D1-21-1C-9E-B6",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "67:88:8E:D4:2A:6D": {
+    "name": "67-88-8E-D4-2A-6D",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T00:20:17"
+  },
+  "C4:19:B9:A8:4C:D6": {
+    "name": "C4-19-B9-A8-4C-D6",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T11:23:39"
+  },
+  "4F:49:F7:52:B9:67": {
+    "name": "4F-49-F7-52-B9-67",
+    "device_type": "ble",
+    "first_seen": "2026-08-19T11:23:39"
+  }
+}

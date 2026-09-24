@@ -1,0 +1,12 @@
+{
+  "dev-734a990cde": {
+    "name": "name-75310afaae",
+    "device_type": "classic",
+    "first_seen": "2026-09-02T14:40:25"
+  },
+  "dev-1e3c797d97": {
+    "name": "name-4e77134280",
+    "device_type": "ble",
+    "first_seen": "2026-09-02T14:40:25"
+  }
+}

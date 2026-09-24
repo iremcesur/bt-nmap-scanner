@@ -1,0 +1,701 @@
+% =====================================================================
+%  short6.tex -- 6-page condensed version
+%  "Layered, Evidence-Aware Bluetooth Fingerprinting"
+%
+%  SCOPE RULE for this file: it contains ONLY claims, results and figures
+%  that appear in the project report (Irem's_Report_EN). Nothing from the
+%  longer latest.tex that the report does not state has been carried over.
+%  In particular this draft deliberately omits: the repeat-scan stability
+%  study, the three implementation defects found by the new pair, the
+%  chronology and vendor-text checks, confidence intervals, and the
+%  GDPR/ethics section. Those live in latest.tex.
+%  EXCEPTION 2, requested separately: the worked examples of Section III-F
+%  (Table~\ref{tab:examples}). They are replayed from the archived scans with
+%  research/replay_evidence_chain.py against the current scorer, so they are
+%  project output rather than report content, and one of them states a
+%  limitation the report does not contain (see the text).
+%  EXCEPTION, requested separately: the capability comparison table
+%  (Table~\ref{tab:cap}) and its section. It is condensed from tab:signals
+%  and tab:cap in latest.tex, restricted to the method families the report
+%  itself names, and kept qualitative so that no measured figure absent from
+%  the report is reintroduced.
+%
+%  STATUS: draft. Resolve author block before submission.
+% =====================================================================
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[T1]{fontenc}
+
+\begin{document}
+
+\title{Layered, Evidence-Aware Bluetooth Fingerprinting:\\
+Low-Cost Signals and Conflict-Aware Inference}
+
+% TODO before submission: if a second author is added, restore the \and block
+% that latest.tex carries and confirm the ordering with the supervisor.
+\author{\IEEEauthorblockN{Irem Cesur}
+\IEEEauthorblockA{CYSECDIGITAL Research Group\\
+Technische Hochschule Mittelhessen (THM)\\
+Friedberg, Germany}}
+
+\maketitle
+
+\begin{abstract}
+We infer the type and operating system of a nearby Bluetooth device without
+changing that device's state. Knowing the operating system supports security
+auditing, because many documented weaknesses are specific to particular
+versions, so an OS label narrows which of them could apply. Existing methods
+each reach part of this: they flood the target, read a single protocol field,
+or only listen to the radio, and each falls short in some respect. We aim
+instead for three properties together --- low interaction cost, the ability to
+distinguish many operating systems, and reporting conflicts between signals
+rather than hiding them. We extend an existing baseline scanner with
+additional signal layers obtained at low interaction cost, add one cache-read
+signal usable on re-encounter, and attach an \emph{evidence chain} that leaves
+the prediction unchanged but labels each signal relative to it and lowers the
+reported confidence on a genuine conflict. We then measure how far that
+mechanism works on real data, which produced our main finding. Both signal
+pairs the chain originally compared depended on GATT~Appearance, present in 2
+of 149 records and 0 of 77 scans, so the chain never fired; a pair requiring
+no Appearance raised coverage from 0\% to 48\% of scans, but to 62\% on our
+own devices against 10\% on third-party ones. What limits this class of
+inference is therefore not the quality of a signal but the simultaneous
+availability of the signals a check requires. We claim no calibrated accuracy
+result, and present this as a measurement that openly reports a constraint we
+observed.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Bluetooth fingerprinting, BLE privacy, operating-system identification,
+evidence-based inference, uncertainty, security audit.
+\end{IEEEkeywords}
+
+% =====================================================================
+\section{Introduction}
+% =====================================================================
+Bluetooth is present in phones, wearables, peripherals, and IoT devices
+almost everywhere. The focus of this work is to infer the type and operating
+system of a nearby Bluetooth device without changing the device's state. We
+build on a baseline active scanner developed earlier within our group.
+
+The value of doing so is auditing. If we know a device's operating system, we
+can audit its security, and since various vulnerabilities are specific to
+certain versions, an OS indicator considerably narrows down which
+vulnerabilities of that device could be
+exploited~\cite{barua2022blethreats}. Bluetooth was never designed to expose
+such an identifier, and privacy mechanisms such as MAC-address randomization
+work against recovering one~\cite{martin2017macrandom}.
+
+Existing detection methods almost do this job, but each of them falls short in
+some respect. Flooding-based probing recovers an OS version by observing the
+target under stress~\cite{kavisankar2024osid}, at a high interaction cost and
+with no representation of uncertainty. Methods that read a single protocol
+field or a set of service metadata are cheap~\cite{celosia2019gatt} but stop
+short of an operating system. Methods that only listen to the radio are
+passive and hard to spoof~\cite{santanacruz2024jsdivergence} but need special
+hardware and return an identity rather than an OS.
+
+This work aims for three desirable properties together: low interaction cost,
+the ability to distinguish many operating systems, and reporting conflicts
+between signals rather than hiding them. In other words, rather than producing
+a new signal, the aim is both to enrich what is already available and to make
+uncertainties visible.
+
+Our four contributions are:
+
+\begin{itemize}
+  \item \textbf{Added signal layers at low interaction cost}
+  (Section~\ref{sec:layers}): the LMP feature bitmap, chipset and
+  manufacturer resolution, GATT~Appearance, GATT connection parameters, and
+  the full SDP attribute tree.
+  \item \textbf{A cache-read signal usable on re-encounter}
+  (Section~\ref{sec:layers}): Modalias, read from the host cache rather than
+  from the device.
+  \item \textbf{An evidence chain for conflict-aware inference}
+  (Section~\ref{sec:evidence}): each signal is labelled relative to the
+  inference, and genuine disagreement is reported rather than averaged away.
+  \item \textbf{A measurement of how, and to what extent, the mechanism works
+  on real data} (Section~\ref{sec:eval}).
+\end{itemize}
+
+\noindent\textbf{Constraints and non-goals.} The most fundamental constraint
+is that every signal this method uses --- Class-of-Device, device name,
+GATT~Appearance, Modalias, SDP --- is declared by the target device and is not
+cryptographically bound. The device may declare them falsely and mislead us,
+and we know of no existing method to detect this. In addition, MAC
+randomization causes the same device to be seen as multiple addresses; our
+sample is small, so the rates we measure carry wide confidence intervals; and
+the confidence score we produce is not calibrated. Accordingly, this work
+infers a device type and an operating-system family, but does not claim to
+extract an exact OS version number, does not break MAC randomization, and does
+not perform an accuracy comparison with other methods on shared data. Such a
+comparison would require a ground-truth dataset, a layer-by-layer ablation,
+and a calibrated confidence function. What we actually measure here,
+separately from all of these, is the availability of the signals.
+
+% =====================================================================
+\section{Background}\label{sec:related}
+% =====================================================================
+It is worth being precise about what the existing families of work do, since
+the contribution here is not a better signal but a fuller use of the ones
+already within reach.
+
+\textbf{Flooding the target: Kavisankar \emph{et al.}}~\cite{kavisankar2024osid}
+The closest work in intent identifies the operating system of a
+Bluetooth device by sending traffic and observing how the device responds.
+This reaches a fine-grained answer, and it pays for it twice: the target's
+state is disturbed, which is exactly what we set out to avoid, and the result
+arrives as a single answer with no account of how well supported it was.
+
+\textbf{Reading a single protocol field: Celosia and Cunche}~\cite{celosia2019gatt}
+Fingerprinting from the Generic Attribute Profile a BLE device exposes shows
+that declared metadata alone is often enough to name a device. This is cheap and
+does not disturb the device, and we borrow from it directly. Its limit is
+scope: a device model is not an operating-system family, and a method resting
+on one field inherits whatever that field happens to contain.
+
+\textbf{Only listening to the radio: Santana-Cruz \emph{et al.}}~\cite{santanacruz2024jsdivergence}
+Identifying a device from imperfections in its radio emissions is the
+hardest of the three to spoof, because the device is never asked to declare
+anything. It is also the least deployable, requiring dedicated hardware, and
+it recognises \emph{that} device again rather than reporting what it runs.
+
+\textbf{Our position.} We sit with the declarative methods and accept their
+central weakness, stated above: every signal is declared by the target. What
+we add is breadth, several declared signals rather than one, and an explicit
+account of what happens when those signals do not agree with each other.
+
+% =====================================================================
+\section{Approach}\label{sec:approach}
+% =====================================================================
+\subsection{Layered structure}\label{sec:layers}
+The system scans a single target address in layers. Each layer is defined by
+what it costs to obtain rather than by what it reveals.
+
+\textbf{Layer~0: the baseline active scan.} The inherited scanner, which reads
+the Class-of-Device, the SDP service list, the GATT service identifiers, the
+vendor prefix of the address (OUI), and the LMP protocol version.
+
+\textbf{Layer~1: parsing what is already there, and one cache read.} The
+baseline already issues the query whose response carries the LMP feature
+bitmap; we parse that bitmap rather than discarding it, so the signal costs
+parsing and no new connection. Layer~1 also reads \emph{Modalias} from the
+BlueZ cache, and resolves chipset and manufacturer from it where present.
+Reading the cache requires no live connection at scan time. It does require
+that the host has previously interacted with the device, so Modalias is a
+signal for a re-encounter or a re-scan rather than a generally free one. We
+state this as a scope limit here, and Section~\ref{sec:eval} confirms it
+empirically rather than assuming it.
+
+\textbf{Layer~2: BLE category and the full SDP tree.} We read
+GATT~Appearance, which matters especially for BLE-only devices that expose no
+Class-of-Device, together with the GATT connection parameters; and where the
+baseline reads only a summarised service list, we read the full SDP attribute
+tree.
+
+One point here matters more than its technical detail suggests: \emph{these
+signals do not share a single connection}. SDP goes over the BR/EDR connection
+the baseline already opens, but GATT is read over a separate LE transport. A
+device that answers on one may be silent on the other, and
+Table~\ref{tab:transport} gives the access path per signal for that reason. It
+is the table that explains most of the availability results later.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\caption{Access path per signal. The BR/EDR signals reuse the connection the
+baseline already opens; GATT is read over a separate LE transport; the cache
+read needs no live connection at scan time.}
+\label{tab:transport}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Signal} & \textbf{Access path} \\
+\midrule
+LMP version and feature bitmap & BR/EDR (reuses baseline) \\
+SDP service list and attribute tree & BR/EDR (reuses baseline) \\
+Class-of-Device & inquiry / host cache \\
+GATT Appearance, conn.\ params, UUIDs & LE (separate transport) \\
+Modalias & host cache (no live conn.) \\
+RSSI / RTT (Layer~3) & active observation window \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Layer~3: time-windowed behavioural observation.} A short windowed
+observation such as RSSI and RTT. It is measured and reported, but it does not
+feed back into the current inference. We state this explicitly because it
+bounds every claim that follows: no inference in this work relies on this
+layer.
+
+\subsection{Evidence chain}\label{sec:evidence}
+The methodological core of this work is not a signal but a discipline about
+how signals are combined.
+
+The evidence chain is an audit layer produced separately, after the inference
+has already been determined. It does not change the inference. What it does is
+label each signal as \emph{primary}, \emph{supports}, \emph{conflicts} or
+\emph{unused} relative to that inference, and lower the reported confidence in
+the case of a genuine conflict. This is the point of departure from a single
+fused score: if two signals point in opposite directions, a score records only
+their sum, and the operator never learns that the device contradicted itself.
+
+\textbf{Avoiding circularity.} The \emph{primary} label carries the idea that
+makes the rest work. If an inference was produced by a signal, that signal is
+labelled \emph{primary} and excluded from the count, because comparing it with
+the result it derived itself would be self-validation. Only signals that
+played no part in producing the inference are eligible to support or
+contradict it. The same argument recurs throughout this design, and it is the
+reason several things one might expect to find here are deliberately absent.
+
+\textbf{Two stages.} The process takes place in two stages. First, each signal
+is evaluated against the inference. Second, pairs of independently produced
+signals are evaluated against each other rather than against the inference. A
+pair is evaluated only when both of its halves resolved: a device on which
+only one half is present yields no record, since an absent check is not a
+passed check. That property is unremarkable in itself, and it turns out to
+govern the central result of Section~\ref{sec:eval}.
+
+\subsection{Re-encounter comparison}\label{sec:reencounter}
+When a device is scanned twice, the question that comes to mind is whether
+this scan is consistent with the previous one. The obvious way of answering it
+--- comparing the two inferences --- is closed to us by the circularity
+argument above. Agreement between two inferences measures not accuracy but the
+system's internal consistency, because both inferences come from the same
+scorer.
+
+Therefore, in this part we compare only the invariant fields: Modalias,
+Class-of-Device, and the OUI-resolved manufacturer. These fields cannot differ
+within a short interval; if they differ, there is an error in at least one
+place, and that conclusion is available without any ground truth. A
+disagreement is recorded as \emph{conflicts}. An agreement is counted as
+\emph{unused}, because a reader agreeing with itself is not independent
+corroboration. A device scanned for the first time does not enter this
+comparison at all.
+
+\subsection{Scoring model}\label{sec:scoring}
+The device type is determined by a branching system with a fixed priority
+order, in which the first match wins: Apple, Android, embedded IoT,
+PC/laptop, wearable, audio. Only the Android branch has a numerical model; the
+remaining branches are rule-based. We describe the model at this level
+deliberately, since the weights it uses are not calibrated
+(Section~\ref{sec:approach}) and presenting them as tuned parameters would
+overstate what they are.
+
+\subsection{Worked examples}\label{sec:examples}
+The mechanisms above are easier to judge against concrete records than in the
+abstract. Table~\ref{tab:examples} lists every distinct device in the full-scan
+archive --- 26 devices over 87 scans --- replayed against the current scorer,
+and groups them by what the evidence chain was able to do with each.
+
+The grouping is itself the result. The pair of Section~\ref{sec:evidence} could
+be evaluated on 9 of the 26 devices; on the remaining 17 at least one half did
+not resolve, so no record was produced and the chain was empty. Rows~1 and~11
+show why that matters: they are the same physical earbuds, with the same cached
+Modalias and the same Class-of-Device, distinguished only by whether the
+advertised name resolved. With the name, the cascade returns an audio
+peripheral running an embedded firmware; without it, the same device is
+reported as an Apple phone or computer running iOS~17+. Both answers carry
+confidence \emph{High}, and in the second the chain has nothing to say, because
+an absent check is not a passed check.
+
+Rows~8 and~9 state a limitation of the two-stage design that we had not
+identified before assembling this table. On the smartwatch and on the Samsung
+earbuds, the two category signals agree with each other --- wearable and
+wearable, audio and audio --- so each pair is recorded as \emph{supports}. The
+prediction, however, is \emph{Smartphone} in both cases, contradicting both
+halves of the pair it was just told agree. Nothing in the chain catches this:
+the second stage compares the halves \emph{to each other} and never to the
+prediction, while the first stage does not cover these signals at all, since
+they fed the cascade and are therefore \emph{primary} and excluded by the
+circularity rule of Section~\ref{sec:evidence}. The rule exists so that a
+signal cannot corroborate a prediction it produced; in excluding those signals
+it also gives up the ability to notice that the prediction disagrees with all
+of them at once. A third check --- comparing an agreeing pair against the
+prediction and flagging the case where it matches neither half --- would catch
+both rows, and we state it as future work rather than as something this system
+does.
+
+Two further patterns in the table bear on the availability argument of
+Section~\ref{sec:eval}, and neither is flattering. First, rows~12 and~16: the
+OUI resolves the vendor as Apple, the cached Modalias resolves the vendor as
+Apple, and the prediction is Android~15 at confidence \emph{High}. Here the
+contradicting evidence \emph{was} available and no stage of the chain looks at
+it, because no check compares a resolved vendor against a predicted OS
+family. That is a missing check rather than a missing signal, and it is a
+different failure from the co-availability one this paper argues for.
+
+Second, the largest group in the table is the 13 devices that advertised a name
+which our derivation mapped to no category. Several of those names ---
+\emph{realme 11 Pro+ 5G}, \emph{OPPO A5 2020}, and two Samsung flagships named
+after their model --- are perfectly serviceable product strings. The pair did
+not fire on them because our keyword table did not cover them, not because the
+device withheld anything. Co-availability, as we measure it, is therefore
+partly a property of the environment and partly an artefact of our own
+derivation, and the 48\% coverage figure of Section~\ref{sec:eval} should be
+read with that split in mind.
+
+\begin{table*}[!t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.4pt}
+\renewcommand{\arraystretch}{1.18}
+\caption{Every distinct device in the full-scan archive (26 devices, 87 scans),
+replayed against the current scorer and grouped by what the evidence chain was
+able to do. \textbf{CoD} is the Class-of-Device major class; \textbf{name cat.}
+is the major class implied by the advertised name; the pair of
+Section~\ref{sec:evidence} is evaluated only when both resolve. \textbf{Mod.}
+is the Modalias vendor and product prefix, \textbf{LMP} the link-layer version.
+Names chosen by their owners are redacted as $\langle$name$\rangle$; the rest
+are product strings the devices advertise. Predictions in bold are those where
+the vendor is resolved as Apple and the predicted OS is Android. Every
+prediction here is reported at confidence \emph{High} except the two
+\emph{Unknown Peripheral} rows, which are \emph{Low}.}
+\label{tab:examples}
+\begin{tabular}{@{}c
+>{\raggedright\arraybackslash}p{2.62cm} c c c c c c
+>{\raggedright\arraybackslash}p{4.15cm} c@{}}
+\toprule
+& \textbf{Advertised name} & \textbf{Scans} & \textbf{CoD} & \textbf{name cat.}
+& \textbf{Mod.} & \textbf{LMP} & \textbf{Vendor} & \textbf{Prediction}
+& \textbf{Chain} \\
+\midrule
+\multicolumn{9}{@{}l}{\emph{Pair evaluated; prediction consistent with it}} \\
+\midrule
+1 & $\langle$name$\rangle$ (AirPods) & 13 & \texttt{0x04} & audio & \texttt{v004Cp201} & 14 & Apple & Audio Peripheral (Apple), Embedded Firmware (RTOS) \newline \emph{Audio Sink Device (LMP 14)} & supports \\
+2 & $\langle$name$\rangle$ iPhone & 11 & \texttt{0x02} & phone & \texttt{v004Cp741} & 12 & Apple & Smartphone/Computer (Apple), iOS / macOS \newline \emph{iOS 16.x / macOS 13.x} & supports \\
+3 & Redmi A5 & 2 & \texttt{0x02} & phone & \texttt{v00E0p000} & 11 & Xiaomi & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & supports \\
+4 & $\langle$name$\rangle$.iPhone & 1 & \texttt{0x02} & phone & \texttt{v004Cp741} & 11 & Apple & Smartphone (iPhone), iOS \newline \emph{iOS 15{+}} & supports \\
+5 & iPad von $\langle$name$\rangle$ & 1 & \texttt{0x01} & computer & \texttt{v004Cp770} & 12 & Apple & Smartphone/Computer (Apple), iOS / macOS \newline \emph{iOS 16.x / macOS 13.x} & supports \\
+6 & iPad (2) & 1 & \texttt{0x01} & computer & \texttt{v004Cp790} & 12 & Apple & Smartphone/Computer (Apple), iOS / macOS \newline \emph{iOS 16.x / macOS 13.x} & supports \\
+7 & $\langle$name$\rangle$ \.{I}pad & 1 & \texttt{0x01} & computer & \texttt{v004Cp761} & 12 & Apple & Computer (Mac), macOS \newline \emph{macOS 13{+}} & supports \\
+\midrule
+\multicolumn{9}{@{}l}{\emph{Pair evaluated; \textbf{prediction contradicts both halves of the pair}}} \\
+\midrule
+8 & HUAWEI WATCH FIT 3-8CF & 8 & \texttt{0x07} & wearable & -- & 11 & Huawei & Smartphone, Android \newline \emph{Android 13 (Tiramisu)} & supports \\
+9 & Galaxy Buds2 (C7D2) & 5 & \texttt{0x04} & audio & \texttt{v0075pA01} & 11 & Samsung & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & supports \\
+\midrule
+\multicolumn{9}{@{}l}{\emph{No pair: Class-of-Device present, advertised name resolved to no category}} \\
+\midrule
+10 & realme 11 Pro{+} 5G & 12 & \texttt{0x02} & -- & \texttt{v00E0p000} & 12 & Realme & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+11 & \emph{(none)} & 5 & \texttt{0x04} & -- & \texttt{v004Cp201} & 14 & Apple & Smartphone/Computer (Apple), iOS / macOS \newline \emph{iOS 17{+} / macOS 14{+}} & \emph{empty} \\
+12 & $\langle$name$\rangle$ & 4 & \texttt{0x02} & -- & \texttt{v004Cp750} & 12 & Apple & \textbf{Smartphone, Android} \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+13 & OPPO A5 2020 & 2 & \texttt{0x02} & -- & \texttt{v001Dp120} & 9 & OPPO & Smartphone, Android \newline \emph{Android 14 (Upside Down Cake)} & \emph{empty} \\
+14 & \emph{(none)} & 2 & \texttt{0x04} & -- & \texttt{v0075pA01} & -- & Samsung & Unknown Peripheral, Unknown & \emph{empty} \\
+15 & \emph{(none)} & 1 & \texttt{0x02} & -- & \texttt{v00E0p000} & -- & Realme & Unknown Peripheral, Unknown & \emph{empty} \\
+16 & $\langle$name$\rangle$ & 1 & \texttt{0x02} & -- & \texttt{v004Cp760} & 12 & Apple & \textbf{Smartphone, Android} \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+17 & S22 Ultra von $\langle$name$\rangle$ & 1 & \texttt{0x02} & -- & \texttt{v0075p010} & 11 & Samsung & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+18 & S25{+} von $\langle$name$\rangle$ & 1 & \texttt{0x02} & -- & \texttt{v0075p010} & 13 & Samsung & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+19 & \emph{(none)} & 1 & \texttt{0x01} & -- & \texttt{v0006p000} & 8 & Intel & PC / Laptop, Windows \newline \emph{Windows 8.1 / 10} & \emph{empty} \\
+20 & $\langle$name$\rangle$ & 1 & \texttt{0x01} & -- & \texttt{v0006p000} & 13 & Liteon & PC / Laptop, Windows \newline \emph{Windows 11} & \emph{empty} \\
+21 & ``a (2)'' & 1 & \texttt{0x02} & -- & -- & 14 & Apple & Smartphone (iPhone), iOS \newline \emph{iOS 17{+}} & \emph{empty} \\
+22 & $\langle$name$\rangle$ & 1 & \texttt{0x02} & -- & \texttt{v004Cp761} & 12 & Apple & Smartphone (iPhone), iOS \newline \emph{iOS 16{+}} & \emph{empty} \\
+\midrule
+\multicolumn{9}{@{}l}{\emph{No pair: name category present, no Class-of-Device}} \\
+\midrule
+23 & $\langle$name$\rangle$-LAPTOP & 1 & -- & computer & -- & 9 & Fugui & PC / Laptop, Windows \newline \emph{Windows 8.1 / 10} & \emph{empty} \\
+\midrule
+\multicolumn{9}{@{}l}{\emph{No pair: neither half resolved}} \\
+\midrule
+24 & \emph{(none)} & 8 & -- & -- & -- & 13 & Liteon & PC / Laptop, Windows \newline \emph{Windows 11} & \emph{empty} \\
+25 & $\langle$name$\rangle$ & 1 & -- & -- & -- & 13 & Liteon & PC / Laptop, Windows \newline \emph{Windows 11} & \emph{empty} \\
+26 & $\langle$name$\rangle$'s S22 & 1 & -- & -- & -- & 12 & Samsung & Smartphone, Android \newline \emph{Android 15 (Vanilla Ice Cream)} & \emph{empty} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Differences from the baseline}
+In the baseline work, every signal contributed to a single weighted score and
+a single decision was made without uncertainty, and Modalias was not read. We
+added two things: the new signal layers of Section~\ref{sec:layers} and the
+evidence chain of Section~\ref{sec:evidence}. The result is not a new
+detector. With almost zero new connections, it uses the resources already at
+hand and turns the system into one in which disagreement between signals is
+reported.
+
+% =====================================================================
+\section{Comparison with Existing Methods}\label{sec:comparison}
+% =====================================================================
+The methods of Section~\ref{sec:related} are evaluated on different device
+sets with different mechanisms, so their reported accuracies are not
+comparable and we do not tabulate them as if they were; as stated in the
+introduction, an accuracy comparison on shared data is explicitly not
+something this work performs. What can be compared is what each method
+\emph{requires}, what it \emph{emits}, and how it behaves when its evidence is
+weak. Table~\ref{tab:cap} sets that out along the three properties this work
+set out to obtain together.
+
+Read across the rows, the table states the claim of the introduction in a
+compact form. Each existing family obtains two of the three properties at
+most. The flooding method reaches an OS version but disturbs the target and
+reports one verdict whatever the evidence behind it; the declarative metadata
+methods are cheap and quiet but stop at a device model; the radio methods ask
+the device to declare nothing at all, which makes them the hardest to
+mislead, but they need dedicated hardware and return an identity rather than
+an operating system. The baseline we extend reaches an OS but folds every
+signal into one number, so a disagreement between two of its inputs leaves no
+trace in its output.
+
+The last row is not a claim of superiority, and one column is deliberately
+unflattering. This work obtains the three properties together, but the
+conflict reporting it adds is only as available as the signals a check needs
+--- which is what Section~\ref{sec:eval} measures, and where it arrives at
+48\% of scans overall and 10\% on third-party devices. A mark in the final
+column therefore describes a mechanism that exists, not one that fires on
+every scan.
+
+\begin{table*}[!t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.3}
+\caption{Which properties each method has. The three rightmost
+columns are the properties this work set out to obtain together (Section~I).
+Cells are qualitative: the methods report results on disjoint device sets, so
+no row is comparable to another as a score, and none is given here. ``Interaction
+cost'' means radio activity beyond passive discovery. This work is the last
+row.}
+\label{tab:cap}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+>{\raggedright\arraybackslash}p{2.9cm}
+>{\raggedright\arraybackslash}p{3.5cm}
+>{\raggedright\arraybackslash}p{2.6cm}
+>{\raggedright\arraybackslash}p{3.4cm}@{}}
+\toprule
+\textbf{Method} & \textbf{Signals it reads} & \textbf{Low interaction cost}
+& \textbf{Distinguishes many OSes} & \textbf{Reports conflicts between signals} \\
+\midrule
+Kavisankar \emph{et al.}~\cite{kavisankar2024osid}\newline \emph{(flooding the target)} &
+Responses under induced stress; timing &
+\textbf{No}: floods the target and changes its state &
+\textbf{Yes}: OS and version &
+\textbf{No}: one verdict, always emitted \\
+\addlinespace
+Celosia and Cunche~\cite{celosia2019gatt}\newline \emph{(single protocol field)} &
+GATT attribute profile &
+\textbf{Yes}: one read, device undisturbed &
+\textbf{No}: device model, not an OS &
+\textbf{No}: a uniqueness score, not a disagreement \\
+\addlinespace
+Santana-Cruz \emph{et al.}~\cite{santanacruz2024jsdivergence}\newline \emph{(radio layer only)} &
+Radio-layer emissions &
+\textbf{Yes} in radio terms, but requires dedicated hardware &
+\textbf{No}: a device identity, not an OS &
+\textbf{No}: a confidence value only \\
+\addlinespace
+% TODO: the report attributes the baseline to a former group member (Aniket).
+% If it should be named or cited here, supply the surname and a citable
+% artifact (thesis, internal report, repository); do not leave it anonymous
+% by default.
+Baseline scanner, this group\newline \emph{(extended here)} &
+CoD, SDP list, GATT UUIDs, OUI, LMP version &
+Medium: one connect-and-query pass &
+\textbf{Yes}: OS and version &
+\textbf{No}: all signals fused into one weighted score \\
+\addlinespace
+\textbf{This work} &
+The baseline's signals, plus the LMP feature bitmap, Modalias, GATT
+Appearance and connection parameters, and the full SDP tree &
+\textbf{Yes}: Layers~1--2 reuse the baseline's connection or read the host
+cache; almost zero new connections &
+\textbf{Yes}: OS family and version, same branches as the baseline &
+\textbf{Yes}: explicit conflict flag and lowered confidence --- but gated on
+signal co-availability (Section~\ref{sec:eval}) \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+% =====================================================================
+\section{Preliminary Signal-Availability Measurement}\label{sec:eval}
+% =====================================================================
+The question this section answers is how often the Layer~1--2 signals we added
+are actually present in the surroundings. This is not an accuracy study, and
+we treat it as the prior question rather than a lesser one: a rarely present
+signal, no matter how well it classifies, cannot help us as long as it is not
+present. In this sense availability took precedence over accuracy.
+
+\textbf{Method.} A standalone audit passively discovers Bluetooth addresses
+and then runs only the Layer~1--2 queries against each, recording per device
+whether it was \emph{reached} at all and, if so, which signals it exposed. We
+separate availability from the signal being rich: a device that opens a
+connection but exposes no tracked signal is counted as reached, not as a
+connection failure, since conflating the two would make the fraction of
+reached devices exposing a given signal partly circular. Two availability
+rounds were run: a pilot in a single office and a wider sweep across several
+locations. Separately, a set of full scans was archived, and those archives
+are what the evidence-chain measurement below replays.
+
+\textbf{Reachability is the first constraint.} The pipeline could not reach
+the vast majority of addresses at all: 16 of 18 in the pilot, and 46 of 52 in
+the sweep (Table~\ref{tab:avail}). Whatever the added signals are worth, they
+are worth nothing on an address the pipeline never opens a channel to, and
+this dominates every other availability figure we report.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\caption{Signal availability in the wild. Modalias is a host-cache read rather
+than a live signal, and is reported against all addresses in the round. Counts
+are given raw: at these sample sizes a percentage would read as an estimate it
+cannot support.}
+\label{tab:avail}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.7cm} r r@{}}
+\toprule
+& \textbf{Pilot ($n{=}18$)} & \textbf{Sweep ($n{=}52$)} \\
+\midrule
+Never reached by pipeline & 16 & 46 \\
+Reached & 2 & 6 \\
+\midrule
+Modalias present (of all addresses) & 8/18 & 0/52 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Modalias is a re-scan signal, and the measurement shows it.} Modalias
+came out at 44\% on previously paired devices in the office, while it was not
+found at all in scans at different locations. The pilot ran where the host had
+already dealt with those devices; the sweep met unfamiliar ones and found
+nothing cached. This is the scope claim of Section~\ref{sec:layers} turned
+into evidence rather than left as an assurance: Modalias is only useful on
+re-scan.
+
+\textbf{The evidence chain did not work on real data, and the reason is the
+finding.} Having built the chain, we examined how it works on the archived
+scans, and found that it did not fire. The cause was not in its logic. Both of
+the first two pairs we had chosen depended on GATT~Appearance, and this signal
+was present in only 2 of 149 records and in 0 of 77 scans. We had gated the
+entire mechanism on the scarcest signal in the study.
+
+The error is instructive because of how it was made. We had chosen the pairs
+according to how \emph{independent} they were, and had not paid attention to
+how often they are present \emph{together}. Choosing a new pair that does not
+require Appearance --- Class-of-Device against the advertised name --- raised
+coverage from 0\% to 48\% of scans.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{Coverage of the Class-of-Device versus advertised-name pair, split by
+whose devices were scanned. Coverage means both halves resolved, so the pair
+could be evaluated at all.}
+\label{tab:pairsplit}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.2cm} r@{}}
+\toprule
+\textbf{Population} & \textbf{Coverage} \\
+\midrule
+Own devices & 62\% \\
+Third-party devices & 10\% \\
+\midrule
+All scans & 48\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Coverage does not transfer to unfamiliar devices.}
+Table~\ref{tab:pairsplit} carries the result we consider most important, and
+it is the least flattering one here. The method worked at 62\% on our own
+devices and at only 10\% on third-party devices. The own-device figure is
+therefore an upper bound that does not transfer to the setting the method
+exists for, and reporting it alone would have overstated the method's reach by
+roughly a factor of six.
+
+\textbf{What this means for the design.} What limits this kind of inference is
+not the quality of the signal but the simultaneous availability
+--- the co-availability --- of the required signals. A pair is useful only if
+both halves are also commonly present, and we can draw a further conclusion
+from this: independence and availability work against each other. The signals
+that are most clearly independent of the primary decision path are precisely
+the ones that path did not need, and therefore the ones a device is least
+likely to expose. At our sample sizes we state this as the constraint that
+governs how such a mechanism should be built, and as a hypothesis the pair
+change above is designed to test, rather than as a settled result.
+
+\textbf{Limitations of this measurement.} It measures availability, not
+identification accuracy. The sample is small, so every proportion carries a
+wide confidence interval, and the rounds count \emph{addresses} rather than
+distinct devices, which MAC randomization means is not the same thing. The
+evidence chain, though it now fires, has not yet produced a genuine
+device-originated conflict on real data, and Section~\ref{sec:examples} shows
+a class of disagreement --- the prediction contradicting an agreeing pair ---
+that its current two stages cannot express at all.
+
+% =====================================================================
+\section{Conclusion}\label{sec:conclusion}
+% =====================================================================
+In this work we added low-cost new signal layers, and an evidence chain that
+makes conflicts visible, to an existing baseline scanner. The goal was not so
+much to produce a new signal as to enrich the resources at hand and report
+uncertainty honestly.
+
+When we measured the mechanism on real data, we learned the actual lesson.
+What limits this kind of inference is not the quality of the signal but the
+co-availability of the required signals: the method worked at 62\% on our own
+devices and only 10\% on third-party ones, and before that it had not worked
+at all, because both of its original pairs rested on a signal present in 2 of
+149 records. We therefore present this work not as an accuracy success but as
+a measurement that openly reports a constraint we observed.
+
+The next steps follow directly from the non-goals stated in the introduction.
+An accuracy claim needs a ground-truth dataset, a layer-by-layer ablation, and
+a calibrated confidence function; each of those is future work, and none of
+them is assumed here.
+
+% =====================================================================
+\section*{Acknowledgment}
+% =====================================================================
+This work was carried out at the CYSECDIGITAL research group, THM.
+% TODO before submission: add advisor, collaborators, and any funding.
+
+% =====================================================================
+%  REFERENCES --- re-verify every entry against the primary source.
+%  Only the works the report itself refers to are cited: the three method
+%  families it names, the version-specific-vulnerability claim, and MAC
+%  randomization.
+% =====================================================================
+\begin{thebibliography}{00}
+
+\bibitem{kavisankar2024osid}
+L.~Kavisankar, A.~Vemuri, S.~Venkatesan, and R.~Khondoker,
+``A Novel Strategy for the Identification of the Operating System of
+Bluetooth-Enabled Devices for Security Audit,''
+in \emph{Proc.\ 11th Int.\ Conf.\ Internet of Things: Systems,
+Management and Security (IOTSMS)}, IEEE, 2024.
+
+\bibitem{celosia2019gatt}
+G.~Celosia and M.~Cunche,
+``Fingerprinting Bluetooth-Low-Energy Devices Based on the Generic
+Attribute Profile,''
+in \emph{Proc.\ 2nd Int.\ ACM Workshop on Security and Privacy for the
+Internet-of-Things (IoT S\&P)}, 2019.
+
+\bibitem{santanacruz2024jsdivergence}
+R.~F.~Santana-Cruz, M.~Moreno-Guzman, C.~E.~Rojas-L\'opez,
+R.~V\'azquez-Mor\'an, and R.~V\'azquez-Medina,
+``Bluetooth Device Identification Using RF Fingerprinting and
+Jensen--Shannon Divergence,''
+\emph{Sensors}, vol.~24, no.~5, art.~1482, 2024.
+
+\bibitem{martin2017macrandom}
+J.~Martin \emph{et al.},
+``A Study of MAC Address Randomization in Mobile Devices and When It
+Fails,''
+\emph{Proc.\ Privacy Enhancing Technologies}, 2017(4).
+
+\bibitem{barua2022blethreats}
+A.~Barua, M.~A.~Al Alamin, M.~S.~Hossain, and E.~Hossain,
+``Security and Privacy Threats for Bluetooth Low Energy in IoT and
+Wearable Devices: A Comprehensive Survey,''
+\emph{IEEE Open Journal of the Communications Society}, vol.~3, 2022.
+
+\end{thebibliography}
+
+\end{document}
